@@ -5,8 +5,7 @@ export const MovieApp = () => {
   const [search, setSearch] = useState("");
   const [movieList, setMovieList] = useState(null);
 
-  const urlBase = "https://api.themoviedb.org/3/search/movie";
-  const API_KEY = "f957da2832b7b1a9ea846529ca376fbc";
+  const urlBase = import.meta.env.VITE_API_URL;
 
   const handleInputChange = (event) => {
     setSearch(event.target.value);
@@ -19,9 +18,8 @@ export const MovieApp = () => {
 
   const fetchMovies = async () => {
     try {
-      const response = await fetch(
-        `${urlBase}?query=${search}&api_key=${API_KEY}`
-      );
+      const response = await fetch(`${urlBase}/api/movies?movie=${search}`);
+      console.log(`url es ${urlBase}/api/movies?movie=${search}`);
       const data = await response.json();
       setMovieList(data.results);
       console.log(data.results);
@@ -44,23 +42,21 @@ export const MovieApp = () => {
           />
 
           <button>Search</button>
-
-          {movieList && (
-            <div className="movie-list">
-              {movieList.map((movie) => (
-                <div key={movie.id} className="movie-card">
-                  <img
-                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                    alt={movie.title}
-                  />
-                  <h2>{movie.title}</h2>
-                  <p>{movie.overview}</p>
-                </div>
-              ))}
-            </div>
-          )}
         </form>
-
+        {movieList && (
+          <div className="movie-list">
+            {movieList.map((movie) => (
+              <div key={movie.id} className="movie-card">
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
+                />
+                <h2>{movie.title}</h2>
+                <p>{movie.overview}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );
